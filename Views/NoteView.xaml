@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp1.Views.NoteView"
+             
+             xmlns:viewmodel="clr-namespace:MauiApp1.ViewModels">
+            <!--bind this view with viewModel-->
+            <ContentView.BindingContext>
+                <viewmodel:NoteViewModel/>
+            </ContentView.BindingContext>
+    <VerticalStackLayout Padding="15">
+        <Label 
+            FontSize="Medium"
+            Text="Notes Data"
+            HorizontalOptions="Start" />
+        <Frame>
+            <VerticalStackLayout Spacing="5">
+                <Label 
+                    FontSize="Small"
+                    Text="Note Title"
+                    TextColor="Tomato"
+                    HorizontalOptions="Start" />
+                <Entry  
+                   BackgroundColor="White"
+                    Text="{Binding NoteTitle}"
+                    TextColor="Black"
+                    FontSize="20"
+                    Placeholder="Enter Title Here"
+                />
+                <Label 
+                    FontSize="Small"
+                    TextColor="Tomato"
+                    Text="Note Description"
+                    HorizontalOptions="Start" />
+                <Editor  
+                    Placeholder="Enter Description Here"
+                    Text="{Binding NoteDescription}"
+                    Background="White"
+                    TextColor="Black"
+                    FontSize="15"
+                    HeightRequest="200"
+                   
+                />
+                <Button Command="{Binding AddNoteCommand}" Text="Add Note"/>
+            </VerticalStackLayout>
+        </Frame>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <ListView ItemsSource="{Binding NoteCollection}" 
+                  SelectedItem="{Binding SelectedNote}" 
+                  Grid.Column="1" 
+                      >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" 
+                                   Text="{Binding Title}" 
+                                   FontAttributes="Bold" 
+                                   FontSize="Medium" 
+                                   TextColor="Green" />
+                                <Label Grid.Row="1" 
+                                   Text="{Binding Description}" 
+                                   FontSize="Small" 
+                                   TextColor="Green" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+        <HorizontalStackLayout Spacing="30" Margin="10">
+            <Button  Text="Remove Note" Command="{Binding DeleteNoteCommand}"/>
+            <Button Text="Edit Note" Command="{Binding EditNoteCommand}"/>
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</ContentView>
