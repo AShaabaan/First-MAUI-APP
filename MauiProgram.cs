@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MauiApp1.ViewModels;
+using MauiApp1.Views;
+using Microsoft.Extensions.Logging;
 
 namespace MauiApp1
 {
@@ -15,6 +17,10 @@ namespace MauiApp1
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+
+            //Inject Objects
+            builder.Services.AddScoped<NoteView>();
+            builder.Services.AddScoped<NoteViewModel>();
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif

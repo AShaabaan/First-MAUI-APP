@@ -96,7 +96,11 @@ namespace MauiApp1.ViewModels
             NoteDescription = string.Empty;
         }
 
-
+        public void SetData()
+        {
+            NoteTitle = selectedNote.Title;
+            NoteDescription = selectedNote.Description;
+        }
 
 
 

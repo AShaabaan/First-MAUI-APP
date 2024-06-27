@@ -50,7 +50,10 @@
                 <ColumnDefinition Width="3*" />
             </Grid.ColumnDefinitions>
 
-            <ListView ItemsSource="{Binding NoteCollection}" 
+            <ListView 
+                x:Name="NoteListView"
+                ItemSelected="NoteListView_ItemSelected"
+                ItemsSource="{Binding NoteCollection}" 
                   SelectedItem="{Binding SelectedNote}" 
                   Grid.Column="1" 
                       >
