@@ -35,7 +35,7 @@
                 <Editor  
                     Placeholder="Enter Description Here"
                     Text="{Binding NoteDescription}"
-                    Background="White"
+                    BackgroundColor="White"
                     TextColor="Black"
                     FontSize="15"
                     HeightRequest="200"

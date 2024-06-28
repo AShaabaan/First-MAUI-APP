@@ -1,6 +1,7 @@
 ﻿using MauiApp1.Data;
 using MauiApp1.ViewModels;
 using MauiApp1.Views;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace MauiApp1
@@ -25,6 +26,7 @@ namespace MauiApp1
 
 
             //Inject Objects
+            builder.Services.AddScoped<MyContext>();
             builder.Services.AddScoped<NoteView>();
             builder.Services.AddScoped<NoteViewModel>();
 

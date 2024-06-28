@@ -15,10 +15,12 @@ namespace MauiApp1.Data
         //Connect to DB
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            #region
             //to resolve Protection on andriod 
             //string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             //var fileName = Path.Combine(path, "DBNote.db");
             //optionsBuilder.UseSqlite("Filename="+fileName);
+            #endregion
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, "DBNote.db");
             optionsBuilder.UseSqlite($"Filename={dbPath}");
 

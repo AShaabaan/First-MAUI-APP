@@ -16,7 +16,7 @@ namespace MauiApp1.ViewModels
 {
     public partial class NoteViewModel :ObservableObject //: INotifyPropertyChanged
     {
-        MyContext db;
+        //MyContext db;
 
         [ObservableProperty]
         private string noteTitle;
@@ -29,8 +29,10 @@ namespace MauiApp1.ViewModels
         
         [ObservableProperty]
         ObservableCollection<Note> noteCollection;
-        
-        
+        private NoteEntity dataHelper;
+
+
+
         #region Old Commands
         //public ICommand AddNoteCommand { get; set; }
         //public ICommand RemoveNoteCommand { get; set; }
@@ -39,11 +41,14 @@ namespace MauiApp1.ViewModels
         public NoteViewModel() 
         {
             noteCollection = new ObservableCollection<Note>();
-            db = new MyContext();
+            dataHelper = new NoteEntity();
+            LoadData();
 
+            #region Connect to database using Old Way
+            //db = new MyContext();
             //to check if data saved into db or not 
-            var ListOfNotes = db.Notes.ToList();
-
+            //var ListOfNotes = db.Notes.ToList();
+            #endregion
             #region Old Methods for Commands
             //AddNoteCommand = new Command(AddNote);
             //RemoveNoteCommand = new Command(DeleteNote);
@@ -51,83 +56,129 @@ namespace MauiApp1.ViewModels
             #endregion
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         [RelayCommand] //Auto Generate For Command >> EditNoteCommand 
-        private void EditNote()
+        private async void EditNote()
         {
+            #region Old Code
+            //if (SelectedNote != null)
+            //{
+
+            //foreach (Note note in NoteCollection.ToList()) 
+            //{
+            //    if(note ==  SelectedNote)
+            //    {
+            //         var newNote = new Note()
+            //         {
+            //             Id = note.Id,
+            //             Title = NoteTitle,
+            //             Description = NoteDescription,
+
+            //         };
+            //        NoteCollection.Remove(note);
+            //        NoteCollection.Add(newNote);
+
+            //    }
+            //}
+
+            //}
+            #endregion
             if (SelectedNote != null) 
             {
-                foreach (Note note in NoteCollection.ToList()) 
+                var note = new Note
                 {
-                    if(note ==  SelectedNote)
-                    {
-                         var newNote = new Note()
-                         {
-                             Id = note.Id,
-                             Title = NoteTitle,
-                             Description = NoteDescription,
-
-                         };
-                        NoteCollection.Remove(note);
-                        NoteCollection.Add(newNote);
-
-                    }
-                }
+                    Id = SelectedNote.Id,
+                    Title = NoteTitle,
+                    Description = NoteDescription
+                };
+                await dataHelper.UpdateDataAsync(note);
+                LoadData();
             }
+
         }
+       
+        /// <summary>
+        /// Delete Selected Note
+        /// </summary>
         [RelayCommand]
-        private void DeleteNote()
+        private async void DeleteNote()
         {
             if(SelectedNote != null)
             {
-                NoteCollection.Remove(SelectedNote);
+                //NoteCollection.Remove(SelectedNote);
+                
+                await dataHelper.DeleteDataAsync(SelectedNote);
+                
                 //Reset Values 
                 NoteTitle = string.Empty;
                 NoteDescription = string.Empty;
             }
+            LoadData();
         }
+        
+        /// <summary>
+        /// Add Note To Note Collection
+        /// </summary>
         [RelayCommand]
-        private void AddNote()
+        private async void AddNote()
         {
-            var newId = NoteCollection.Count > 0 ? NoteCollection.Max(p=> p.Id) +1 : 1;
-            var note = new Note()
-            {
-                Id = newId,
-                Title = NoteTitle,
-                Description = NoteDescription,
-             
-            }; 
+            #region OldCode Before Using IDataHelper
+            //var newId = NoteCollection.Count > 0 ? NoteCollection.Max(p=> p.Id) +1 : 1;
+            //var note = new Note()
+            //{
+            //    Id = newId,
+            //    Title = NoteTitle,
+            //    Description = NoteDescription,
 
-            //for test
-            var note1 = new Note()
-            {
-                Title = NoteTitle,
-                Description = NoteDescription,
-             
-            };
-            if (note1 != null)
-            {
-                db.Notes.Add(note1);
-                db.SaveChanges();
-            }
-            NoteCollection.Add(note);
-            
+            //}; 
+
+            ////for test
+            //var note1 = new Note()
+            //{
+            //    Title = NoteTitle,
+            //    Description = NoteDescription,
+
+            //};
+            //if (note1 != null)
+            //{
+            //    db.Notes.Add(note1);
+            //    db.SaveChanges();
+            //}
+            //NoteCollection.Add(note);
+            #endregion
+
+            var note = new Note();
+            note.Title = NoteTitle;
+            note.Description = NoteDescription;
+            await dataHelper.AddDataAsync(note);
+            LoadData();
             //Reset Values 
             NoteTitle = string.Empty;
             NoteDescription = string.Empty;
         }
 
+        /// <summary>
+        /// Load Selected Data Into Entry
+        /// </summary>
         public void SetData()
         {
             NoteTitle = selectedNote.Title;
             NoteDescription = selectedNote.Description;
         }
-
-
-
-
-
-
+ 
+        /// <summary>
+        ///To Fetch Any Change Happend and Upload New Data 
+        /// </summary>
+        public async void LoadData()
+        {
+            NoteCollection.Clear();
+            foreach (var note in await dataHelper.GetAllAsync())
+            {
+                NoteCollection.Add(note);
+            }
+        }
 
 
 
