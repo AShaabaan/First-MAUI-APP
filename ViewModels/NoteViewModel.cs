@@ -10,11 +10,14 @@ using System.Threading.Tasks;
 //using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MauiApp1.Data;
 
 namespace MauiApp1.ViewModels
 {
     public partial class NoteViewModel :ObservableObject //: INotifyPropertyChanged
     {
+        MyContext db;
+
         [ObservableProperty]
         private string noteTitle;
 
@@ -36,6 +39,10 @@ namespace MauiApp1.ViewModels
         public NoteViewModel() 
         {
             noteCollection = new ObservableCollection<Note>();
+            db = new MyContext();
+
+            //to check if data saved into db or not 
+            var ListOfNotes = db.Notes.ToList();
 
             #region Old Methods for Commands
             //AddNoteCommand = new Command(AddNote);
@@ -89,8 +96,22 @@ namespace MauiApp1.ViewModels
                 Title = NoteTitle,
                 Description = NoteDescription,
              
+            }; 
+
+            //for test
+            var note1 = new Note()
+            {
+                Title = NoteTitle,
+                Description = NoteDescription,
+             
             };
+            if (note1 != null)
+            {
+                db.Notes.Add(note1);
+                db.SaveChanges();
+            }
             NoteCollection.Add(note);
+            
             //Reset Values 
             NoteTitle = string.Empty;
             NoteDescription = string.Empty;

@@ -1,5 +1,6 @@
 ﻿using MauiApp1.ViewModels;
 using MauiApp1.Views;
+using SQLitePCL;
 
 namespace MauiApp1
 {
@@ -10,6 +11,7 @@ namespace MauiApp1
             InitializeComponent();
 
             MainPage = new AppShell();
+            Batteries.Init();
 
 
         }
